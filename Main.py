@@ -1,3 +1,4 @@
+import os
 from Tokenizer import *
 from tkinter import *
 from tkinter import ttk
@@ -5,7 +6,11 @@ ws = Tk()
 filename = ""
 def get_input():
     filename=disp_tf.get()
-    Tokenizer.read_lines(filename)
+    if(os.path.isdir(filename)):
+        for i in os.listdir(filename):
+            Tokenizer.read_lines(filename+"/"+i)
+    else:
+        Tokenizer.read_lines(filename)
     L2 = Label(ws,text="Tokenizing successful",background="#2C3333",foreground="#E7F6F2")
     L2.place(x=140,y=230)
 def close():

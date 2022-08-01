@@ -3,6 +3,7 @@ class Tokenizer:
     Output_list=[]
     token_list=[]
     token_dict=[]
+    special_symbols={"<":"lt;",">":"gt"}
     File_name=""
     keyword =["class","construnctor","function","method","field","static","var","int","char","boolean","void","true","false","null","this","do","if","else","while","return","let"]
     symbols = list("{}()[].,;+-*/&|<>=-~+-*/&|<>=")
@@ -46,7 +47,7 @@ class Tokenizer:
             for i in Tokenizer.token_dict:
                 file.write(i+"\n")
                 file.flush()
-            file.write("</tokens>")
+            file.write("</tokens>"+"\n")
             file.flush()
     def add_tokens(self=None):
         for i in Tokenizer.Input_list:
@@ -93,11 +94,23 @@ class Tokenizer:
         elif(token.find('"')!=-1):
             return "stringConstant"
         elif(token.isdigit()):
-            return "intConstant"
+            return "integerConstant"
         else:
             return "identifier"
     def add_token_type(self=None):
         for i in Tokenizer.token_list:
+            if(i.find("\"")!=-1):
+               Tokenizer.token_dict.append("<"+Tokenizer.token_type(i)+"> "+i.replace("\"","")+" </"+Tokenizer.token_type(i)+">")
+               continue
+            elif (i.find("<")!=-1):
+               Tokenizer.token_dict.append("<"+Tokenizer.token_type(i)+"> "+"&lt;"+" </"+Tokenizer.token_type(i)+">")
+               continue
+            elif (i.find(">")!=-1):
+               Tokenizer.token_dict.append("<"+Tokenizer.token_type(i)+"> "+"&gt;"+" </"+Tokenizer.token_type(i)+">")
+               continue
+            elif (i.find("&")!=-1):
+               Tokenizer.token_dict.append("<"+Tokenizer.token_type(i)+"> "+"&amp;"+" </"+Tokenizer.token_type(i)+">")
+               continue    
             Tokenizer.token_dict.append("<"+Tokenizer.token_type(i)+"> "+i+" </"+Tokenizer.token_type(i)+">")
         Tokenizer.write_file()
     def out_putfile(self=None):
